@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Facial Recognition & NFC Access Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+</head>
+<body>
+
+  <!-- Admin Login Modal -->
+  <div id="loginModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="brand" style="justify-content: center; margin-bottom: 1rem;">
+        <div class="brand-icon">🛡️</div>
+        <span>Secure Access Admin</span>
+      </div>
+      <h3>Admin Sign In</h3>
+      <p>Log in with administrator credentials to manage users, face profiles, and access control.</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Admin Username</label>
+          <input type="text" id="loginUsername" class="form-control" value="admin" required placeholder="Enter username">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" class="form-control" value="admin123" required placeholder="Enter password">
+        </div>
+        <div id="loginError" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- App Main Structure -->
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <span>BioAccess AI</span>
+      </div>
+
+      <ul class="nav-links">
+        <li class="nav-item active" data-tab="dashboard">
+          <span>📊</span> Overview & Stats
+        </li>
+        <li class="nav-item" data-tab="users">
+          <span>👥</span> Students & Guests
+        </li>
+        <li class="nav-item" data-tab="live">
+          <span>🎥</span> Live Access Scanner
+        </li>
+        <li class="nav-item" data-tab="logs">
+          <span>📋</span> Access Audit Logs
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="admin-badge">
+          <div>
+            <div style="font-weight: 600;" id="adminNameDisplay">Admin User</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Administrator</div>
+          </div>
+          <button id="logoutBtn" class="logout-btn" title="Logout">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <div class="header-title">
+          <h2 id="viewTitle">Overview & System Metrics</h2>
+        </div>
+        <div class="header-actions">
+          <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>System Online & Active</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD OVERVIEW -->
+      <section id="dashboardView" class="content-view active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Total Registered Users</h4>
+              <div class="stat-value" id="statTotalUsers">0</div>
+            </div>
+            <div class="stat-icon bg-blue">👤</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Students Enrolled</h4>
+              <div class="stat-value" id="statTotalStudents">0</div>
+            </div>
+            <div class="stat-icon bg-purple">🎓</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Special Guests</h4>
+              <div class="stat-value" id="statTotalGuests">0</div>
+            </div>
+            <div class="stat-icon bg-green">🌟</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Access Grants Today</h4>
+              <div class="stat-value" id="statTotalGranted">0</div>
+            </div>
+            <div class="stat-icon bg-green">✅</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Denied Attempts</h4>
+              <div class="stat-value" id="statTotalDenied">0</div>
+            </div>
+            <div class="stat-icon bg-red">⛔</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Recent Access Activity</span>
+              <button class="btn btn-outline btn-sm" id="refreshDashboardBtn">🔄 Refresh</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>User / Subject</th>
+                    <th>Role</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="recentLogsTableBody">
+                  <tr><td colspan="5" style="text-align:center; color: var(--text-muted);">Loading recent activity...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">System Status & Quick Controls</span>
+            </div>
+            <div style="line-height: 1.8; color: var(--text-muted);">
+              <p>✔️ <strong>TensorFlow / Face API Model:</strong> Loaded & Ready</p>
+              <p>✔️ <strong>NFC Reader Interface:</strong> Web NFC API Ready / Reader Emulation Active</p>
+              <p>✔️ <strong>Database:</strong> MongoDB / Local Storage Sync Active</p>
+              <p>✔️ <strong>Local Face Data Engine:</strong> Active (128D Embedding Storage)</p>
+            </div>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem;">
+              <button class="btn btn-primary" data-tab-link="users">➕ Register New Subject</button>
+              <button class="btn btn-outline" data-tab-link="live">🎥 Open Live Scanner</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: USER & FACE MANAGEMENT -->
+      <section id="usersView" class="content-view">
+        <div class="grid-2">
+          <!-- User Registration Form -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title" id="formTitle">Register Student or Special Guest</span>
+            </div>
+            <form id="userRegistrationForm">
+              <input type="hidden" id="editUserId" value="">
+
+              <div class="avatar-preview">
+                <img id="facePreviewImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='1.5'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>" alt="Preview">
+              </div>
+
+              <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="userNameInput" class="form-control" required placeholder="e.g. Alex Johnson">
+              </div>
+
+              <div class="form-group">
+                <label>Role Type *</label>
+                <select id="userRoleInput" class="form-control" required>
+                  <option value="Student">Student</option>
+                  <option value="Special Guest">Special Guest (Spl Guest)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>NFC Card ID (Swipe card or type tag)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" id="userNfcInput" class="form-control" placeholder="e.g. NFC-884920">
+                  <button type="button" class="btn btn-outline btn-sm" id="generateNfcBtn">Generate</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Contact Email / Phone</label>
+                <input type="email" id="userEmailInput" class="form-control" placeholder="e.g. alex@university.edu">
+              </div>
+
+              <div class="form-group">
+                <label>Face Image & Feature Enrollment *</label>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <button type="button" class="btn btn-outline" id="startCamEnrollBtn">📷 Use Webcam</button>
+                  <label for="uploadFaceInput" class="btn btn-outline" style="cursor: pointer;">📁 Upload Image</label>
+                  <input type="file" id="uploadFaceInput" accept="image/*" style="display: none;">
+                </div>
+                <!-- Enrollment Webcam preview container -->
+                <div id="enrollCamContainer" style="display: none; position: relative; margin-top: 0.5rem;">
+                  <video id="enrollWebcam" autoplay muted playsinline style="width: 100%; height: 220px; border-radius: 8px; background: #000;"></video>
+                  <button type="button" class="btn btn-primary btn-sm" id="captureEnrollFaceBtn" style="position: absolute; bottom: 10px; right: 10px;">📸 Capture Face</button>
+                </div>
+                <div id="faceStatusText" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                  No face feature model extracted yet.
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;" id="saveUserBtn">Save Subject Profile</button>
+                <button type="button" class="btn btn-outline" id="resetFormBtn">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- User Directory -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Directory (Students & Guests)</span>
+              <input type="text" id="searchUsersInput" class="form-control" style="width: 180px; padding: 0.4rem 0.75rem;" placeholder="Search...">
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>NFC ID</th>
+                    <th>Face Data</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="userListTableBody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading subjects...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LIVE RECOGNITION & NFC ACCESS CONTROL -->
+      <section id="liveView" class="content-view">
+        <div class="grid-2">
+          <!-- Live Scanner Camera -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Live Facial Recognition Camera Feed</span>
+              <button class="btn btn-primary btn-sm" id="toggleLiveCamBtn">▶ Start Camera</button>
+            </div>
+            <div class="scanner-container">
+              <video id="webcamFeed" autoplay muted playsinline></video>
+              <canvas id="faceOverlayCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+              <div class="scanner-overlay" id="scannerOverlay">
+                <div class="scanner-line"></div>
+                <div style="color: rgba(255,255,255,0.7); font-size: 0.85rem;" id="scannerText">Align face within frame</div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Recognition Threshold: <strong>0.55 Distance</strong></span>
+              <button class="btn btn-primary" id="triggerFaceScanBtn">🔍 Verify Face Now</button>
+            </div>
+          </div>
+
+          <!-- NFC Simulator & Access Verification Status -->
+          <div>
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">NFC ID Card Reader / Simulator</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Scan or simulate scanning a student or special guest's physical NFC card ID.
+              </p>
+              <div class="form-group">
+                <label>NFC Card Tag ID</label>
+                <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" id="liveNfcInput" class="form-control" placeholder="e.g. NFC-884920">
+                  <button class="btn btn-primary" id="verifyNfcBtn">💳 Swipe Card</button>
+                </div>
+              </div>
+              <button class="btn btn-outline" id="verifyHybridBtn" style="width: 100%; margin-top: 0.5rem;">
+                ⚡ Hybrid Verification (Face + NFC Required)
+              </button>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Access Control Status Result</span>
+              </div>
+              <div id="accessResultContainer">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                  Awaiting facial scan or NFC card swipe...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: ACCESS LOGS & AUDIT TRAIL -->
+      <section id="logsView" class="content-view">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Access Control Security Logs</span>
+            <div style="display: flex; gap: 0.5rem;">
+              <select id="logStatusFilter" class="form-control" style="width: 140px; padding: 0.4rem 0.75rem;">
+                <option value="ALL">All Status</option>
+                <option value="GRANTED">Granted Only</option>
+                <option value="DENIED">Denied Only</option>
+              </select>
+              <button class="btn btn-outline btn-sm" id="refreshLogsBtn">🔄 Refresh Logs</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Subject Name</th>
+                  <th>Role</th>
+                  <th>Method</th>
+                  <th>Match Confidence</th>
+                  <th>Access Decision</th>
+                  <th>Note / Reason</th>
+                </tr>
+              </thead>
+              <tbody id="logsTableBody">
+                <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Loading logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

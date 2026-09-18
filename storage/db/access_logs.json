@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "034a6bd6-9ba5-486c-b3e0-32813c6d4fe4",
+    "userId": "bd0e1fc6-6340-4e79-8888-86cc6c81f5dc",
+    "userName": "John Student",
+    "role": "Student",
+    "nfcCardId": "NFC-STU-1001",
+    "matchScore": 100,
+    "verificationMethod": "NFC",
+    "accessStatus": "GRANTED",
+    "timestamp": "2026-09-18T22:12:19.647Z"
+  },
+  {
+    "_id": "d3ac0db6-4b3c-4ebe-b54b-c7ed291702c8",
+    "userId": "bd0e1fc6-6340-4e79-8888-86cc6c81f5dc",
+    "userName": "John Student",
+    "role": "Student",
+    "nfcCardId": "NFC-STU-1001",
+    "matchScore": 98,
+    "verificationMethod": "FACE",
+    "accessStatus": "GRANTED",
+    "timestamp": "2026-09-18T22:12:19.651Z"
+  },
+  {
+    "_id": "fa83b8e2-37fd-427e-a992-f3de8a8ecc7d",
+    "userName": "Unknown Person",
+    "role": "Unknown",
+    "matchScore": 0,
+    "verificationMethod": "FACE",
+    "accessStatus": "DENIED",
+    "denialReason": "No matching facial profile found within confidence threshold",
+    "timestamp": "2026-09-18T22:12:19.653Z"
+  }
+]
