@@ -69,6 +69,13 @@ class AccessLogRepository {
       totalLogs: logs.length
     };
   }
+  static async clearAll() {
+    if (getDbState().isMongoConnected) {
+      await MongooseAccessLog.deleteMany({});
+    } else {
+      localDb.saveCollection('access_logs', []);
+    }
+  }
 }
 
 module.exports = { AccessLogRepository, MongooseAccessLog };

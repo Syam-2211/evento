@@ -387,13 +387,14 @@
       <section id="logsView" class="content-view">
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Security Audit Logs</span>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <select id="logStatusFilter" class="form-control" style="width: 130px; padding: 0.4rem 0.75rem;">
-                <option value="ALL">All Status</option>
-                <option value="GRANTED">Granted</option>
-                <option value="DENIED">Denied</option>
+            <span class="panel-title">System Audit Logs</span>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+              <select id="logStatusFilter" class="form-control" style="width: auto;">
+                <option value="ALL">All Events</option>
+                <option value="GRANTED">Granted Only</option>
+                <option value="DENIED">Denied Only</option>
               </select>
+              <button id="clearLogsBtn" class="btn btn-outline btn-sm" style="border-color: var(--danger); color: var(--danger);">🗑️ Clear Logs</button>
               <button class="btn btn-outline btn-sm" id="refreshLogsBtn">🔄 Refresh</button>
             </div>
           </div>

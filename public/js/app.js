@@ -1087,4 +1087,28 @@ function renderLogsTable(logs) {
     `;
   }).join('');
 }
- 
+
+document.addEventListener('DOMContentLoaded', () => {
+  const clearBtn = document.getElementById('clearLogsBtn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to clear all audit logs?')) return;
+      try {
+        const res = await fetch('/api/access/logs', {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Logs cleared successfully', 'success');
+          loadLogsData();
+          loadDashboardData();
+        } else {
+          showToast('Failed to clear logs', 'error');
+        }
+      } catch (err) {
+        showToast('Error clearing logs', 'error');
+      }
+    });
+  }
+}); 

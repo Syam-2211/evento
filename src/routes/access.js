@@ -266,4 +266,14 @@ router.get('/stats', authAdmin, async (req, res) => {
   }
 });
 
+// Clear Access Logs
+router.delete('/logs', authAdmin, async (req, res) => {
+  try {
+    await AccessLogRepository.clearAll();
+    res.json({ success: true, message: 'Logs cleared successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
