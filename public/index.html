@@ -444,10 +444,26 @@
               <span class="panel-title">CCTV Security Matrix</span>
             </div>
             <div class="cctv-grid">
-              <div class="cctv-feed"><div class="feed-label">CAM 1: Gate A</div><div class="feed-overlay scanning"></div></div>
-              <div class="cctv-feed"><div class="feed-label">CAM 2: Hall B</div><div class="feed-overlay"></div></div>
-              <div class="cctv-feed"><div class="feed-label">CAM 3: VIP Lounge</div><div class="feed-overlay scanning"></div></div>
-              <div class="cctv-feed"><div class="feed-label">CAM 4: Ext Perimeter</div><div class="feed-overlay"></div></div>
+              <div class="cctv-feed">
+                <video autoplay muted playsinline class="cctv-video" id="cctvCam1"></video>
+                <div class="feed-label">CAM 1: Gate A</div>
+                <div class="feed-overlay scanning"></div>
+              </div>
+              <div class="cctv-feed">
+                <video autoplay muted playsinline class="cctv-video" id="cctvCam2"></video>
+                <div class="feed-label">CAM 2: Hall B</div>
+                <div class="feed-overlay"></div>
+              </div>
+              <div class="cctv-feed">
+                <video autoplay muted playsinline class="cctv-video" id="cctvCam3"></video>
+                <div class="feed-label">CAM 3: VIP Lounge</div>
+                <div class="feed-overlay scanning"></div>
+              </div>
+              <div class="cctv-feed">
+                <video autoplay muted playsinline class="cctv-video" id="cctvCam4"></video>
+                <div class="feed-label">CAM 4: Ext Perimeter</div>
+                <div class="feed-overlay"></div>
+              </div>
             </div>
           </div>
           
@@ -458,7 +474,7 @@
               <button class="btn btn-outline btn-sm" id="toggleThermalBtn">🔥 Thermal Vision</button>
             </div>
             <div class="drone-feed-container" id="droneFeed">
-              <video autoplay loop muted playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.2) grayscale(0.2);">
+              <video id="droneVideo" autoplay loop muted playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.2) grayscale(0.2); transition: filter 0.3s;">
                 <source src="/video/evento_log.mp4" type="video/mp4">
               </video>
               <div class="drone-hud">

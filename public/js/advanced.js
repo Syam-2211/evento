@@ -189,7 +189,53 @@ function setupDroneAuth() {
   }
 }
 
+let droneWebcamStream = null;
+
+async function startDroneCameras() {
+  try {
+    if (!droneWebcamStream) {
+      droneWebcamStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      
+      const cctvIds = ['cctvCam1', 'cctvCam2', 'cctvCam3', 'cctvCam4'];
+      cctvIds.forEach(id => {
+        const vid = document.getElementById(id);
+        if (vid) vid.srcObject = droneWebcamStream;
+      });
+      
+      const droneVid = document.getElementById('droneVideo');
+      if (droneVid) {
+        droneVid.srcObject = droneWebcamStream;
+      }
+    }
+  } catch (err) {
+    console.warn("Camera access denied or unavailable for Drone/CCTV.", err);
+    showToast("Camera access required for live Drone/CCTV feeds.", "error");
+  }
+}
+
+function stopDroneCameras() {
+  if (droneWebcamStream) {
+    droneWebcamStream.getTracks().forEach(t => t.stop());
+    droneWebcamStream = null;
+  }
+}
+
 function setupAdvancedModules() {
+  // Thermal Toggle
+  const thermalBtn = document.getElementById('toggleThermalBtn');
+  if (thermalBtn) {
+    thermalBtn.addEventListener('click', () => {
+      const droneVid = document.getElementById('droneVideo');
+      const cctvVids = document.querySelectorAll('.cctv-video');
+      
+      if (droneVid) droneVid.classList.toggle('thermal-mode');
+      cctvVids.forEach(vid => vid.classList.toggle('thermal-mode'));
+      
+      const isThermal = droneVid && droneVid.classList.contains('thermal-mode');
+      showToast(isThermal ? 'Thermal Vision Activated' : 'Thermal Vision Deactivated', 'info');
+    });
+  }
+
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
       const tab = item.getAttribute('data-tab');
@@ -200,11 +246,14 @@ function setupAdvancedModules() {
       }
       
       // Drone simulation only runs if authorized, and pauses if tab is hidden (optional)
-      if (tab !== 'drones' && droneInterval) { 
-        clearInterval(droneInterval);   
-        droneInterval = null;   
-      } else if (tab === 'drones' && isDroneAuthorized && !droneInterval) {
-        startDroneSimulation(); // Resume if they come back to the tab
+      if (tab !== 'drones') { 
+        if (droneInterval) { clearInterval(droneInterval); droneInterval = null; }
+        stopDroneCameras();
+      } else if (tab === 'drones') {
+        startDroneCameras();
+        if (isDroneAuthorized && !droneInterval) {
+          startDroneSimulation(); // Resume if they come back to the tab
+        }
       }
     });
   });
