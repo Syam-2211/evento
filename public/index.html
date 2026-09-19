@@ -236,6 +236,10 @@
                 <select id="userRoleInput" class="form-control" required>
                   <option value="Student">Student</option>
                   <option value="Special Guest">Special Guest</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Faculty">Faculty</option>
+                  <option value="Volunteer">Volunteer</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
@@ -466,8 +470,8 @@
               <div class="crosshair"></div>
             </div>
             <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-              <button class="btn btn-primary" style="flex:1;">Deploy Recon</button>
-              <button class="btn btn-danger">Return to Base</button>
+              <button class="btn btn-primary" style="flex:1;" id="deployDroneBtn">Deploy Recon</button>
+              <button class="btn btn-danger" id="returnDroneBtn">Return to Base</button>
             </div>
           </div>
         </div>
@@ -527,6 +531,20 @@
         Yuva
       </footer>
     </main>
+  </div>
+
+  <!-- Drone Auth Modal -->
+  <div id="droneAuthModal" class="sidebar-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000;">
+    <div class="modal-box auth-card" style="position: relative; max-width: 350px; background: rgba(10,14,26,0.95); display: block; border-color: var(--danger);">
+      <h3 style="color: var(--danger); margin-bottom: 0.5rem;">Classified Access</h3>
+      <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem;">Aerial reconnaissance requires higher clearance.</p>
+      <input type="text" id="droneAuthUser" class="form-control" placeholder="Username" style="margin-bottom: 1rem;" autocomplete="off">
+      <input type="password" id="droneAuthKey" class="form-control" placeholder="Security Key" style="margin-bottom: 1.5rem;" autocomplete="off">
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-danger" style="flex: 1;" id="confirmDroneAuthBtn">Authorize</button>
+        <button class="btn btn-outline" id="cancelDroneAuthBtn">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <script src="/js/app.js"></script>

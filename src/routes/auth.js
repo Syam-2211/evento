@@ -9,22 +9,39 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const adminUser = process.env.ADMIN_USERNAME || 'admin';
     const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
+    
+    const genericAccounts = {
+      'faculty': 'faculty123',
+      'staff': 'staff123',
+      'volunteer': 'volunteer123',
+      'yuva': 'Evento'
+    };
 
-    if (username !== adminUser || password !== adminPass) {
-      return res.status(401).json({ success: false, message: 'Invalid admin username or password.' });
+    let isValid = false;
+    let userRole = 'Admin';
+
+    if (username === adminUser && password === adminPass) {
+      isValid = true;
+    } else if (genericAccounts[username] && password === genericAccounts[username]) {
+      isValid = true;
+      userRole = username.charAt(0).toUpperCase() + username.slice(1);
+    }
+
+    if (!isValid) {
+      return res.status(401).json({ success: false, message: 'Invalid username or password.' });
     }
 
     const token = jwt.sign(
-      { username, role: 'Admin' },
+      { username, role: userRole },
       process.env.JWT_SECRET || 'supersecret_admin_jwt_key_2026',
       { expiresIn: '24h' }
     );
 
     res.json({
       success: true,
-      message: 'Admin authentication successful',
+      message: 'Authentication successful',
       token,
-      user: { username, role: 'Admin' }
+      user: { username, role: userRole }
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

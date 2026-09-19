@@ -133,12 +133,85 @@ function startDroneSimulation() {
   droneInterval = setInterval(tick, 3000);
 }
 
+let isDroneAuthorized = false;
+
+function setupDroneAuth() {
+  const deployBtn = document.getElementById('deployDroneBtn');
+  const returnBtn = document.getElementById('returnDroneBtn');
+  const modal = document.getElementById('droneAuthModal');
+  const confirmBtn = document.getElementById('confirmDroneAuthBtn');
+  const cancelBtn = document.getElementById('cancelDroneAuthBtn');
+  const userInp = document.getElementById('droneAuthUser');
+  const keyInp = document.getElementById('droneAuthKey');
+
+  if(deployBtn) {
+    deployBtn.addEventListener('click', () => {
+      if (isDroneAuthorized) {
+        showToast('Drone Alpha-1 is already deployed.', 'info');
+        return;
+      }
+      modal.style.display = 'flex';
+    });
+  }
+
+  if(cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+      userInp.value = '';
+      keyInp.value = '';
+    });
+  }
+
+  if(confirmBtn) {
+    confirmBtn.addEventListener('click', () => {
+      if (userInp.value === 'yuva' && keyInp.value === 'Evento') {
+        modal.style.display = 'none';
+        userInp.value = '';
+        keyInp.value = '';
+        isDroneAuthorized = true;
+        showToast('Authorization accepted. Deploying Alpha-1.', 'success');
+        startDroneSimulation();
+      } else {
+        showToast('ACCESS DENIED. Invalid credentials.', 'error');
+      }
+    });
+  }
+  
+  if (returnBtn) {
+    returnBtn.addEventListener('click', () => {
+      if (droneInterval) {
+         clearInterval(droneInterval);
+         droneInterval = null;
+      }
+      isDroneAuthorized = false;
+      showToast('Drone Alpha-1 returning to base.', 'info');
+    });
+  }
+}
+
 function setupAdvancedModules() {
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
       const tab = item.getAttribute('data-tab');
-      if (tab !== 'map' && heatmapInterval)  { clearInterval(heatmapInterval); heatmapInterval = null; }
-      if (tab !== 'drones' && droneInterval) { clearInterval(droneInterval);   droneInterval = null;   }
+      if (tab === 'map') {
+        if (!heatmapInterval) startHeatmapSimulation();
+      } else {
+        if (heatmapInterval) { clearInterval(heatmapInterval); heatmapInterval = null; }
+      }
+      
+      // Drone simulation only runs if authorized, and pauses if tab is hidden (optional)
+      if (tab !== 'drones' && droneInterval) { 
+        clearInterval(droneInterval);   
+        droneInterval = null;   
+      } else if (tab === 'drones' && isDroneAuthorized && !droneInterval) {
+        startDroneSimulation(); // Resume if they come back to the tab
+      }
     });
   });
+  
+  setupDroneAuth();
 }
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', setupAdvancedModules);
+
