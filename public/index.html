@@ -97,7 +97,7 @@
             <div style="font-weight: 600;" id="adminNameDisplay">Admin User</div>
             <div style="font-size: 0.75rem; color: var(--text-muted);">Administrator</div>
           </div>
-          <button id="logoutBtn" class="logout-btn" title="Logout">🚪</button>
+          <button id="logoutBtn" class="btn btn-outline btn-sm" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">Logout</button>
         </div>
       </div>
     </aside>
@@ -454,6 +454,9 @@
               <button class="btn btn-outline btn-sm" id="toggleThermalBtn">🔥 Thermal Vision</button>
             </div>
             <div class="drone-feed-container" id="droneFeed">
+              <video autoplay loop muted playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.2) grayscale(0.2);">
+                <source src="/video/evento_log.mp4" type="video/mp4">
+              </video>
               <div class="drone-hud">
                 <div class="hud-item">ALT: <span id="droneAlt">120m</span></div>
                 <div class="hud-item">SPD: <span id="droneSpd">45km/h</span></div>
