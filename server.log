@@ -1,0 +1,7 @@
+◇ injected env (5) from .env
+MongoDB connection failed. Falling back to local file-system database store: connect ECONNREFUSED 127.0.0.1:27017
+====================================================
+Facial Recognition & NFC Access Control Server Running
+Port: 3000
+URL:  http://localhost:3000
+====================================================

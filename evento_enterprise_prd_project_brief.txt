@@ -1,0 +1,66 @@
+# EVENTO Enterprise — Product Requirements Document (PRD) & Project Brief
+
+## 1. Executive Summary
+**EVENTO Enterprise** is a high-end, real-time event operations and crowd management platform designed for professional event organizers, security chiefs, venue administrators, and emergency response teams. Built with a futuristic-professional enterprise aesthetic, EVENTO unifies physical security, biometric access control, drone surveillance, crowd density mapping, and incident dispatch into a single cohesive command center.
+
+* **Tagline:** “See the crowd. Understand the risk. Act before it matters.”
+* **Core Product Flow:** Register → Scan → Verify → Enter → Monitor → Detect Risk → Alert → Respond
+
+---
+
+## 2. Target Audience & Personas
+* **Event Operations Directors:** Oversee venue capacity, inflow velocity, schedule timelines, and overall event telemetry.
+* **Security Chiefs & Operators:** Monitor live CCTV feeds, drone recon, facial recognition access control, and immediate threat alerts.
+* **Medical & Emergency Responders:** Coordinate rapid dispatch for medical assistance, lost persons, and evacuation simulations.
+* **Guest Services & Registration Staff:** Manage badge issuance, visitor logs, and attendee ticket verification.
+
+---
+
+## 3. Architecture & Key Functional Modules
+
+### 3.1 Authentication & Onboarding
+* **50/50 Desktop Split Layout:** Features the official EVENTO logo with subtle glow and light sweep animation, live interactive crowd network visualization, tagline, and clean glassmorphism authentication card.
+* **Secure Sign-in & Cinematic Transition:** Smooth transition handling authentication loading states into the main command dashboard.
+
+### 3.2 Main Command Dashboard
+* **Animated KPI Counters:** Total Registrations (with demographic breakdown: Students, Guests), Live Attendance, Crowd Status, Active Cameras, and Risk Alerts.
+* **Active Incident Ticker:** Real-time operational banner highlighting bottlenecks or security alerts with direct dispatch actions.
+* **Live Attendance Flow & Venue Occupancy:** 6-hour inflow velocity line charts and registered demographic capacity bars.
+
+### 3.3 Face Recognition & Biometric Access Control
+* **Biometric Operations Dashboard:** Tracks active scanners, total verifications, average match latency (142ms), and blocked watchlisted attempts.
+* **Live Biometric Camera Matrix:** Multi-stream video feeds with bounding boxes, facial landmark tracking points, and match confidence indicators (e.g., *Alex Mercer - 98.4% Match*).
+* **Threat & Alert Stream:** Instant notification triggers for watchlist matches and restricted zone attempts with one-click dispatch and override controls.
+
+### 3.4 Crowd Control & Interactive Venue Map
+* **Vector Venue Grid:** Interactive map covering Main Gate, Gate 2, Stages, Food Court, Registration, Medical, Parking, and Emergency Exits.
+* **Heatmap Density Monitoring:** Color-coded zones ranging from Low (blue/cyan) to Critical (red/orange) with live attendee counts and capacity thresholds.
+
+### 3.5 Attendance & Scanner Management
+* **Turnstile Telemetry:** Real-time status cards for physical scanner units (Online, Offline, Syncing, Battery % and Ping).
+* **Gate Breakdown & Velocity:** Inflow distribution across primary entry points and real-time check-in stream logs.
+
+### 3.6 CCTV & Drone Aerial Reconnaissance
+* **Multi-Camera Surveillance Matrix:** 1080p/4K live camera cards with FPS indicators, audio toggles, fullscreen controls, and PTZ status.
+* **Autonomous Drone Unit Panel:** Telemetry monitoring for aerial altitude, speed, GPS lock, thermal imaging, and return-to-base overrides.
+
+### 3.7 Alerts, Incidents & Missing Person Workflows
+* **Incident Management Dashboard:** Severity categorization from Info to Critical, assigned team tracking, and Venue Incident Radar mapping.
+* **Missing Person Protocol:** Workflow tracking from initial report and photo upload to CCTV face-matching, sector drone sweeps, and emergency broadcasting.
+
+### 3.8 Program Schedule & Visitor Logs
+* **Event Agenda:** Timeline and list views with session tracks, speaker bios, location mapping, and attendee capacity tracking.
+* **Searchable Visitor Logs:** Advanced filtering by visitor type (VIP, Speaker, Press, General), gate entry/exit timestamps, status badges, and CSV export.
+
+### 3.9 Reports & Analytics
+* **Operational Intelligence:** Attendance volume trends, gate traffic distribution, crowd density history, camera uptime metrics, and instant PDF/CSV report generation.
+
+### 3.10 System Settings & Theme Management
+* **Global Configuration:** Account credentials, avatar management, event parameters, notification routing, and animated theme switching (Light / Dark / System).
+
+---
+
+## 4. Design System & Visual Guidelines
+* **Color Palette:** Deep dark navy surface (`#0a122a`), vibrant electric blue (`#4361ee`), cyan accents (`#00f5ff`), and crisp white typography.
+* **Aesthetics:** Glassmorphism used sparingly, soft drop shadows, rounded cards (`rounded-xl` / `rounded-2xl`), and generous whitespace.
+* **Typography:** Clean geometric sans-serif (Inter) with clear hierarchy and luminous data readouts.
