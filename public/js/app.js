@@ -1,7 +1,7 @@
 // ============================================================
-// BioAccess AI — Admin Portal Client Application
-// Facial Recognition + NFC Access Control
-// Mobile webcam support with camera selection
+// Evento — Admin Portal Client Application
+// Facial Recognition + NFC Access Control + Advanced Surveillance
+// Mobile webcam, Drone HUD, Heatmap, Incidents & Missing Person
 // ============================================================
 
 let authToken = localStorage.getItem('adminToken') || '';
@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initApp() {
   checkAuthStatus();
   setupEventListeners();
+  setupAdvancedModules();
   loadModels();
   enumerateCameras();
 }
@@ -464,6 +465,37 @@ function setupEventListeners() {
   document.getElementById('refreshDashboardBtn').addEventListener('click', loadDashboardData);
   document.getElementById('refreshLogsBtn').addEventListener('click', loadLogsData);
   document.getElementById('logStatusFilter').addEventListener('change', loadLogsData);
+
+  // -- Thermal Toggle --
+  const thermalBtn = document.getElementById('toggleThermalBtn');
+  if (thermalBtn) {
+    thermalBtn.addEventListener('click', () => {
+      const droneFeed = document.getElementById('droneFeed');
+      const isOn = droneFeed.classList.toggle('thermal-mode');
+      thermalBtn.textContent = isOn ? '🟢 Normal Vision' : '🔥 Thermal Vision';
+      showToast(isOn ? 'Thermal imaging activated' : 'Normal vision restored', isOn ? 'warning' : 'info', 2500);
+    });
+  }
+
+  // -- Missing Person Sweep --
+  const sweepBtn = document.getElementById('initiateSweepBtn');
+  if (sweepBtn) {
+    sweepBtn.addEventListener('click', () => {
+      const sweepStatus = document.getElementById('sweepStatus');
+      sweepStatus.style.display = 'block';
+      sweepBtn.disabled = true;
+      sweepBtn.textContent = '⏳ Sweep in Progress...';
+      showToast('🚁 Drones deployed — scanning all 4 cameras + aerial grid', 'warning', 5000);
+
+      setTimeout(() => {
+        sweepStatus.innerHTML = '✅ Sweep Complete — No match found. Alert sent to security team.';
+        sweepStatus.style.color = 'var(--warning)';
+        sweepBtn.disabled = false;
+        sweepBtn.textContent = '🔍 Initiate Global Sweep';
+        showToast('Sweep complete. Authorities notified via SMS & Dashboard alert.', 'success', 5000);
+      }, 6000);
+    });
+  }
 }
 
 // ============================================================
@@ -482,13 +514,18 @@ function switchTab(tabId) {
     dashboard: 'Overview & System Metrics',
     users: 'Student & Guest Management',
     live: 'Live Facial Recognition Scanner',
-    logs: 'Access Audit Logs'
+    logs: 'Access Audit Logs',
+    map: 'Crowd Control & Live Venue Heatmap',
+    drones: 'Drone & CCTV Reconnaissance',
+    incidents: 'Incidents, Alerts & Missing Person Protocol'
   };
   document.getElementById('viewTitle').textContent = titles[tabId] || 'Dashboard';
 
   if (tabId === 'dashboard') loadDashboardData();
   if (tabId === 'users') loadUsersList();
   if (tabId === 'logs') loadLogsData();
+  if (tabId === 'map') startHeatmapSimulation();
+  if (tabId === 'drones') startDroneSimulation();
 }
 
 // ============================================================
@@ -1050,3 +1087,4 @@ function renderLogsTable(logs) {
     `;
   }).join('');
 }
+ 

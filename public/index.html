@@ -80,6 +80,15 @@
         <li class="nav-item" data-tab="logs">
           <span>📋</span> Access Audit Logs
         </li>
+        <li class="nav-item" data-tab="map">
+          <span>🗺️</span> Crowd & Venue Map
+        </li>
+        <li class="nav-item" data-tab="drones">
+          <span>🚁</span> Drone & CCTV Recon
+        </li>
+        <li class="nav-item" data-tab="incidents">
+          <span>🚨</span> Incidents & Alerts
+        </li>
       </ul>
 
       <div class="sidebar-footer">
@@ -406,6 +415,110 @@
         </div>
       </section>
 
+      <!-- TAB 5: CROWD CONTROL & MAP -->
+      <section id="mapView" class="content-view">
+        <div class="panel" style="min-height: 500px; display: flex; flex-direction: column;">
+          <div class="panel-header">
+            <span class="panel-title">Live Venue Heatmap</span>
+            <div class="status-indicator"><div class="status-dot active" style="background: var(--success); box-shadow: 0 0 8px var(--success);"></div><span style="color: var(--success);">Live Feed</span></div>
+          </div>
+          <div class="heatmap-container" id="venueHeatmap">
+            <div class="venue-zone" style="top: 20%; left: 15%;">Main Gate <br><span class="density-label" id="densityGate">Loading...</span></div>
+            <div class="venue-zone" style="top: 40%; left: 50%;">Food Court <br><span class="density-label" id="densityFood">Loading...</span></div>
+            <div class="venue-zone" style="top: 75%; left: 75%;">Main Stage <br><span class="density-label" id="densityStage">Loading...</span></div>
+            <div class="heatmap-overlay" id="heatmapOverlay"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: DRONE & CCTV RECON -->
+      <section id="dronesView" class="content-view">
+        <div class="grid-2">
+          <!-- Multi CCTV Matrix -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">CCTV Security Matrix</span>
+            </div>
+            <div class="cctv-grid">
+              <div class="cctv-feed"><div class="feed-label">CAM 1: Gate A</div><div class="feed-overlay scanning"></div></div>
+              <div class="cctv-feed"><div class="feed-label">CAM 2: Hall B</div><div class="feed-overlay"></div></div>
+              <div class="cctv-feed"><div class="feed-label">CAM 3: VIP Lounge</div><div class="feed-overlay scanning"></div></div>
+              <div class="cctv-feed"><div class="feed-label">CAM 4: Ext Perimeter</div><div class="feed-overlay"></div></div>
+            </div>
+          </div>
+          
+          <!-- Drone Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Autonomous Drone (Alpha-1)</span>
+              <button class="btn btn-outline btn-sm" id="toggleThermalBtn">🔥 Thermal Vision</button>
+            </div>
+            <div class="drone-feed-container" id="droneFeed">
+              <div class="drone-hud">
+                <div class="hud-item">ALT: <span id="droneAlt">120m</span></div>
+                <div class="hud-item">SPD: <span id="droneSpd">45km/h</span></div>
+                <div class="hud-item warning">AQI: <span id="droneAqi">65 (Moderate)</span></div>
+                <div class="hud-item">CO2: <span id="droneCo2">420ppm</span></div>
+              </div>
+              <div class="crosshair"></div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+              <button class="btn btn-primary" style="flex:1;">Deploy Recon</button>
+              <button class="btn btn-danger">Return to Base</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: INCIDENTS & MISSING PERSONS -->
+      <section id="incidentsView" class="content-view">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Active Incident Dispatch</span>
+            </div>
+            <div class="incident-list" id="incidentList">
+              <div class="incident-card critical">
+                <h4>🚨 Gate Overcrowding</h4>
+                <p>Main gate capacity exceeded 95%. Dispatching crowd control unit.</p>
+                <div class="time">Just now</div>
+              </div>
+              <div class="incident-card warning">
+                <h4>⚠️ Watchlist Match</h4>
+                <p>Unrecognized face detected at VIP entrance.</p>
+                <div class="time">2 mins ago</div>
+              </div>
+              <div class="incident-card info">
+                <h4>ℹ️ Air Quality Warning</h4>
+                <p>Drone Alpha-1 reports elevated CO2 near Food Court.</p>
+                <div class="time">10 mins ago</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Missing Person Protocol</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Upload a photo to initiate a venue-wide CCTV and Drone facial sweep.
+            </p>
+            <div class="form-group">
+              <label>Target Photo</label>
+              <input type="file" class="form-control" accept="image/*">
+            </div>
+            <div class="form-group">
+              <label>Name / Description</label>
+              <input type="text" class="form-control" placeholder="e.g. John Doe, blue shirt">
+            </div>
+            <button class="btn btn-danger" style="width: 100%;" id="initiateSweepBtn">🔍 Initiate Global Sweep</button>
+            <div id="sweepStatus" style="margin-top: 1rem; text-align: center; color: var(--info); display: none;">
+              <div class="spinner" style="display:inline-block; margin-right:8px;"></div>Deploying drones and scanning active cameras...
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Footer -->
       <footer style="text-align: center; padding: 2rem 1rem 1rem; color: var(--text-muted); font-size: 0.9rem; margin-top: auto;">
         Yuva
@@ -414,5 +527,6 @@
   </div>
 
   <script src="/js/app.js"></script>
+  <script src="/js/advanced.js"></script>
 </body>
 </html>
