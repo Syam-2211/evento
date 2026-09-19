@@ -1355,3 +1355,136 @@ select.form-control {
 .incident-card h4 { margin-bottom: 0.25rem; font-size: 0.95rem; }
 .incident-card p { font-size: 0.8rem; color: var(--text-muted); }
 .incident-card .time { font-size: 0.7rem; text-align: right; margin-top: 0.5rem; opacity: 0.7; }
+
+/* ============================================================
+   RESPONSIVE DESIGN & MOBILE LAYOUT
+   ============================================================ */
+
+/* Hide mobile elements on desktop by default */
+.mobile-menu-toggle {
+  display: none;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  /* 1. Login Screen Split Layout -> Stacked */
+  .split-layout {
+    flex-direction: column;
+  }
+  .video-section {
+    flex: 0 0 40vh; /* Takes up top 40% of screen */
+    min-height: 250px;
+  }
+  #loginVideoBg {
+    object-position: center 20%;
+  }
+  .video-overlay {
+    padding: 1.5rem;
+    padding-bottom: 2rem;
+  }
+  .video-overlay h2 {
+    font-size: 1.8rem;
+  }
+  .video-overlay p {
+    font-size: 0.9rem;
+  }
+  .auth-section {
+    flex: 1;
+    padding: 1.5rem;
+    align-items: flex-start; /* Move card higher up on mobile */
+  }
+  .modal-box.auth-card {
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* 2. Main Grids */
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .cctv-grid {
+    grid-template-columns: 1fr;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 3. Mobile Sidebar Toggle & Behavior */
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: var(--primary);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  
+  header {
+    padding-left: 4.5rem; /* Make room for the toggle button */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    height: auto;
+    padding-bottom: 1rem;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  /* Heatmap */
+  .heatmap-container {
+    min-height: 350px;
+  }
+  .venue-zone {
+    font-size: 0.7rem;
+    padding: 0.3rem;
+  }
+}
